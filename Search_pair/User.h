@@ -52,65 +52,42 @@ public:
 	}
 	Wishes Get_wishes();
 	vector<string> Get_interes();
+	int Get_ball() { return ball; }
 	
 };
 
 Wishes rand_w();
-void rand_u(User& uu, int g1);
+void rand_u(User& uu, int g1, int c1);
 
 class Search_pair: protected User
 {
 public:
 	void Serach(User us1, vector <User>& us_all)
 	{
-		int* nn = new int[us_all.size()]{};
-		int* ii = new int[us_all.size()]{};
 		for (int i = 0; i < us_all.size(); i++)
 		{
-			if (us1.ww.age1 < us_all[i].age && us1.ww.age2 > us_all[i].age &&
-				us1.age>us_all[i].ww.age1 && us1.age < us_all[i].ww.age2)nn[i]++;
-			if (us1.ww.city== us_all[i].city && us_all[i].ww.city==us1.city)nn[i]++;
-			if (us1.ww.education == us_all[i].education && us_all[i].ww.education == us1.education)nn[i]++;
-
-
-			//set_intersection(us1.ww.interests.begin(), us1.ww.interests.end(), 
-			//	us_all[i].interests.begin(), us_all[i].interests.end(), [](User us1, User us2)
-			//	{
-			//		if(us1.Get_interes() == us2.Get_wishes().interests) cout<< us1.Get_interes()[1];
-			//	});
-
-			/*for (int k = 0; k < us1.ww.interests.size(); k++)
+			Count_if(us1, us_all[i]);				
+		}	
+		auto iter=max_element(us_all.begin(), us_all.end(), [](User user1,User user2)
 			{
-				for (int q = 0; q < us_all[i].interests.size(); q++)
-				{
-					for (int e = 0; e < us1.interests.size(); e++)
-					{
-						for (int w = 0; w < us_all[i].ww.interests.size(); w++)
-						{
-							if (us1.ww.interests[k] == us_all[i].interests[q] && us1.interests[e] == us_all[i].ww.interests[w])
-							{
-								nn[i]++;
-							}
-						}
-					}
-					
-				}
-			}*/
-				
-		}
-		int tmp1,tmp =0;
+				return user1.Get_ball() < user2.Get_ball();
+			});
+		cout << "Мы нашли для вас пару: " << endl;
+		cout << "Совпадений: " << iter->ball << endl;
+		//cout <<endl;
+		cout << "Общие интересы: " << endl;
+		vector <string> Vtmp;
+		sort(us1.interests.begin(), us1.interests.end());
+		sort(iter->interests.begin(), iter->interests.end());
 
-		for (int i = 0; i < us_all.size(); i++)
+		set_intersection(us1.interests.begin(), us1.interests.end(),
+			iter->interests.begin(), iter->interests.end(), back_inserter(Vtmp));		
+		for (auto it : Vtmp)
 		{
-			if (tmp<nn[i])
-			{
-				tmp = nn[i];
-				tmp1 = i;
-			}
+			cout <<'<'<< it <<">  ";
 		}
-		cout << "Ваша пара: " << endl;
-		cout << us_all[tmp1];
+		cout << endl << endl;
+		cout << *iter;
 	}
-
-	int Count_if(User user1, User user2);
-};//cout << us1.ww.interests[k] << "< - >" << us_all[i].interests[q] << endl;
+	void Count_if(User &user1, User &user2);
+};

@@ -18,7 +18,7 @@ istream& operator>>(istream& is, Wishes& w)
 ostream& operator<<(ostream& os, Wishes& w)
 {
 	os << "Предпочтения: " << endl;
-	os <<"Пол: "<< w.gender << "; Возраст: " << w.age1 << '-' << w.age2 << "; Город: " << w.city <<
+	os <<"Пол: "<< w.gender << "; Возраст: " << w.age1 << '-' << w.age2 << ";\nГород: " << w.city <<
 		"; Образование: " << w.education << endl;
 	return os;
 }
@@ -38,9 +38,10 @@ istream& operator>>(istream& is, User& us)
 
 ostream& operator<<(ostream& os, User& us)
 {
-	cout << "--------------------------------------------------------------------------------" << endl;
+	cout << "*******************************************************************************" << endl;
+	os <<"Id: "<<us.id << endl;
 	os << "Имя: " << us.name << "; Фамилия: " << us.surname << "; Пол:" << us.gender << "; Возраст:" <<
-		us.age << "; Город: " << us.city << "; Образование: " << us.education << endl << endl;
+		us.age << ";\nГород: " << us.city << "; Образование: " << us.education << endl << endl;
 	os << "Интересы: " << endl;
 	for (auto it : us.interests)
 	{
@@ -49,7 +50,7 @@ ostream& operator<<(ostream& os, User& us)
 	cout << endl;
 	cout << "--------------------------------------------------------------------------------" << endl;
 	os << us.ww;
-	cout << "--------------------------------------------------------------------------------" << endl;
+	cout << "*******************************************************************************" << endl;
 	return os;
 }
 
@@ -86,14 +87,6 @@ vector<string> User::Get_interes()
 
 Wishes rand_w()
 {
-	vector <string> interes
-	{
-		"животные","музыка","кино","спорт","путешествия","экстрим",
-		"исскуство","книги","психология","религия","природа","юмор",
-		"кулинария","живопись","наука","политика","история","астрономия"
-		,"фантастика"
-	};
-
 	string* educ = new string[3]
 	{ "Среднее","Среднеспециальное","Высшее" };
 	string* city = new string[5]{ "Москва","Якутск","Владивосток", "Новосибирск", "Москва" };
@@ -103,17 +96,18 @@ Wishes rand_w()
 	int a1 = rand() % 18 + 18;
 	int a2 = rand() % 18 + 18;
 	Wishes Wtmp(gg, (a1 > a2 ? a2 : a1), (a1 > a2 ? a1 : a2), city[c], educ[rand() % 3]);
+	//educ[rand() % 3]
 
 	return Wtmp;
 }
 
-void rand_u(User& uu, int g1)
+void rand_u(User& uu, int g1, int c1)
 {
 	
 
 	vector <string> interes
 	{
-		"животные","музыка","кино","спорт","путешествия","экстрим",
+		"животные","музыка","кино","спорт","путешествия",
 		"исскуство","книги","психология","религия","природа","юмор",
 		"кулинария","живопись","наука","политика","история","астрономия"
 		,"фантастика"
@@ -144,11 +138,10 @@ void rand_u(User& uu, int g1)
 		name1 = name3[rand() % 10];
 		surname1 = surname3[rand() % 10];
 	}
-	int cc = rand() % 5;
-	c = cc;
-	interes.size();
+	
+	c = c1;	
 	Wishes Wt = rand_w();
-	User Utmp(name1, surname1, gg, rand() % 18 + 18, city[cc], educ[rand() % 3], Wt);
+	User Utmp(name1, surname1, gg, rand() % 18 + 18, city[c], educ[rand() % 3], Wt);//educ[rand() % 3]
 	int tm = 0;
 	auto it = interes.begin();
 	for (int i = 0; i < rand() % 7 + 3; i++)
@@ -162,10 +155,17 @@ void rand_u(User& uu, int g1)
 	uu = Utmp;
 }
 
-int Search_pair::Count_if(User user1, User user2)
+void Search_pair::Count_if(User &user1, User &user2)
 {
-	if (user.ww.age1 < us_all[i].age && us1.ww.age2 > us_all[i].age &&
-		us1.age > us_all[i].ww.age1 && us1.age < us_all[i].ww.age2)nn[i]++;
-	if (us1.ww.city == us_all[i].city && us_all[i].ww.city == us1.city)nn[i]++;
-	if (us1.ww.education == us_all[i].education && us_all[i].ww.education == us1.education)nn[i]++;
+	int tmp1,tmp = 0;
+	vector <string> Vtmp;
+	if (user1.ww.age1 <user2.age && user1.ww.age2 > user2.age &&user1.age > user2.ww.age1 && user1.age < user2.ww.age2)user2.ball++;
+	if(user1.ww.city == user2.city && user2.ww.city == user1.city)user2.ball++;
+	if(user1.ww.education == user2.education && user2.ww.education == user1.education)user2.ball++;
+
+	sort(user1.interests.begin(), user1.interests.end());
+	sort(user2.interests.begin(), user2.interests.end());
+	set_intersection(user1.interests.begin(), user1.interests.end(),
+		user2.interests.begin(), user2.interests.end(), back_inserter(Vtmp));
+	user2.ball += Vtmp.size();
 }
