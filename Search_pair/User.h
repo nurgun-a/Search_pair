@@ -46,14 +46,10 @@ public:
 	void Push_interests(string str);
 	friend istream& operator >> (istream& is, User& us);
 	friend ostream& operator << (ostream& os, User& us);
-	string gend_get()
-	{
-		return gender;
-	}
+	string gend_get(){return gender;}
 	Wishes Get_wishes();
 	vector<string> Get_interes();
-	int Get_ball() { return ball; }
-	
+	int Get_ball() { return ball; }	
 };
 
 Wishes rand_w();
@@ -62,32 +58,8 @@ void rand_u(User& uu, int g1, int c1);
 class Search_pair: protected User
 {
 public:
-	void Serach(User us1, vector <User>& us_all)
-	{
-		for (int i = 0; i < us_all.size(); i++)
-		{
-			Count_if(us1, us_all[i]);				
-		}	
-		auto iter=max_element(us_all.begin(), us_all.end(), [](User user1,User user2)
-			{
-				return user1.Get_ball() < user2.Get_ball();
-			});
-		cout << "Мы нашли для вас пару: " << endl;
-		cout << "Совпадений: " << iter->ball << endl;
-		//cout <<endl;
-		cout << "Общие интересы: " << endl;
-		vector <string> Vtmp;
-		sort(us1.interests.begin(), us1.interests.end());
-		sort(iter->interests.begin(), iter->interests.end());
-
-		set_intersection(us1.interests.begin(), us1.interests.end(),
-			iter->interests.begin(), iter->interests.end(), back_inserter(Vtmp));		
-		for (auto it : Vtmp)
-		{
-			cout <<'<'<< it <<">  ";
-		}
-		cout << endl << endl;
-		cout << *iter;
-	}
-	void Count_if(User &user1, User &user2);
+	void Serach_p(User us1, vector <User>& us_all);
+	void Count_ball(User &user1, User &user2);
 };
+
+void Show_menu();
